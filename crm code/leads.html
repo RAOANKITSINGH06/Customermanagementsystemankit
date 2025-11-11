@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Leads - Pro CRM</title>
+  <link href="style.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<script>if(localStorage.getItem("isLoggedIn")!=="true")location="login.html";</script>
+
+<nav class="navbar px-4">
+  <a class="navbar-brand logo" href="index.html">Pro CRM</a>
+  <div class="d-flex align-items-center">
+    <span id="welcomeUser" class="me-3 fw-semibold text-light"></span>
+    <div class="profile-circle" id="profileInitial">A</div>
+    <button class="btn btn-sm btn-outline-light ms-3" id="logoutBtn">Logout</button>
+  </div>
+</nav>
+
+<div class="container-fluid mt-4">
+  <div class="row">
+    <aside class="col-md-2 sidebar">
+      <ul class="nav flex-column p-3">
+        <li><a class="nav-link" href="index.html">Dashboard</a></li>
+        <li><a class="nav-link" href="contacts.html">Contacts</a></li>
+        <li><a class="nav-link active" href="leads.html">Leads</a></li>
+        <li><a class="nav-link" href="opportunities.html">Opportunities</a></li>
+        <li><a class="nav-link" href="reports.html">Reports</a></li>
+        <li><a class="nav-link" href="settings.html">Settings</a></li>
+        <li><a class="nav-link" href="profile.html">Profile</a></li>
+      </ul>
+    </aside>
+
+    <main class="col-md-10">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="section-title">Leads Overview</h4>
+        <button class="btn btn-gradient">+ Add New Lead</button>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4"><div class="card glass-card p-3"><h6>Website Signup</h6><p>Status: <span class="text-info">Contacted</span></p><p>Source: Website</p></div></div>
+        <div class="col-md-4"><div class="card glass-card p-3"><h6>LinkedIn Campaign</h6><p>Status: <span class="text-warning">Qualified</span></p><p>Source: LinkedIn</p></div></div>
+        <div class="col-md-4"><div class="card glass-card p-3"><h6>Email Outreach</h6><p>Status: <span class="text-success">Converted</span></p><p>Source: Email</p></div></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+const u=localStorage.getItem("username");
+document.getElementById("welcomeUser").textContent=`Welcome, ${u} 👋`;
+document.getElementById("profileInitial").textContent=u.charAt(0).toUpperCase();
+document.getElementById("logoutBtn").onclick=()=>{localStorage.clear();location="login.html";}
+</script>
+</body>
+</html>
