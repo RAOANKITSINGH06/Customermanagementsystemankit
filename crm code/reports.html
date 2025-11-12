@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reports - Pro CRM</title>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="style.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+</head>
+<body>
+<script>if(localStorage.getItem("isLoggedIn")!=="true")location="login.html";</script>
+
+<nav class="navbar px-4">
+  <a class="navbar-brand logo" href="index.html">Pro CRM</a>
+  <div class="d-flex align-items-center">
+    <span id="welcomeUser" class="me-3 text-light"></span>
+    <div class="profile-circle" id="profileInitial">A</div>
+    <button class="btn btn-sm btn-outline-light ms-3" id="logoutBtn">Logout</button>
+  </div>
+</nav>
+
+<div class="container-fluid mt-4">
+  <div class="row">
+    <aside class="col-md-2 sidebar">
+      <ul class="nav flex-column p-3">
+        <li><a class="nav-link" href="index.html">Dashboard</a></li>
+        <li><a class="nav-link" href="contacts.html">Contacts</a></li>
+        <li><a class="nav-link" href="leads.html">Leads</a></li>
+        <li><a class="nav-link" href="opportunities.html">Opportunities</a></li>
+        <li><a class="nav-link active" href="reports.html">Reports</a></li>
+        <li><a class="nav-link" href="settings.html">Settings</a></li>
+      </ul>
+    </aside>
+
+    <main class="col-md-10">
+      <h4 class="section-title mb-4">Reports & Analytics</h4>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="card p-3">
+            <h6>Monthly Revenue (₹)</h6>
+            <canvas id="revenueChart" height="200"></canvas>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card p-3">
+            <h6>Conversion Rate (%)</h6>
+            <canvas id="conversionChart" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+const user = localStorage.getItem("username");
+document.getElementById("welcomeUser").textContent = `Welcome, ${user} 👋`;
+document.getElementById("profileInitial").textContent = user.charAt(0).toUpperCase();
+document.getElementById("logoutBtn").onclick=()=>{localStorage.clear();location="login.html";}
+
+const revCtx=document.getElementById("revenueChart");
+new Chart(revCtx,{
+  type:"line",
+  data:{
+    labels:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+    datasets:[{
+      label:"Revenue",
+      data:[120000,180000,220000,260000,300000,350000,320000,400000,420000,460000,480000,500000],
+      borderColor:"#ff4db8",
+      backgroundColor:"rgba(255,77,184,0.2)",
+      fill:true,
+      tension:0.4
+    }]
+  },
+  options:{
+    scales:{x:{ticks:{color:"#fff"}},y:{ticks:{color:"#fff"}}},
+    plugins:{legend:{labels:{color:"#fff"}}},
+    animation:{duration:1800,easing:"easeOutCubic"}
+  }
+});
+
+const convCtx=document.getElementById("conversionChart");
+new Chart(convCtx,{
+  type:"doughnut",
+  data:{
+    labels:["Converted","Pending","Lost"],
+    datasets:[{
+      data:[70,20,10],
+      backgroundColor:["#9b5cff","#4cc9f0","#ff4db8"]
+    }]
+  },
+  options:{
+    cutout:"70%",
+    plugins:{legend:{labels:{color:"#fff"}}},
+    animation:{animateRotate:true,animateScale:true,duration:2000}
+  }
+});
+</script>
+</body>
+</html>

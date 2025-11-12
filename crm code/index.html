@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pro CRM - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="style.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+  <style>
+    /* Extra Animations */
+    .card, .kpi, .glass-card {
+      animation: fadeUp 0.9s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .chart-animate {
+      transition: transform 0.8s ease, opacity 0.8s ease;
+      transform: scale(0.9);
+      opacity: 0;
+      animation: chartPop 1.2s ease forwards;
+    }
+    @keyframes chartPop {
+      0% { transform: scale(0.8); opacity: 0; }
+      60% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+<script>
+  if (localStorage.getItem("isLoggedIn") !== "true") window.location.href = "login.html";
+</script>
+
+<nav class="navbar px-4">
+  <a class="navbar-brand logo" href="#">Pro CRM</a>
+  <div class="d-flex align-items-center">
+    <span id="welcomeUser" class="me-3 fw-semibold text-light"></span>
+    <input id="globalSearch" class="form-control form-control-sm me-3" placeholder="Search..." />
+    <div class="profile-circle" id="profileInitial">A</div>
+    <button class="btn btn-sm btn-outline-light ms-3" id="logoutBtn">Logout</button>
+  </div>
+</nav>
+
+<div class="container-fluid mt-4">
+  <div class="row">
+    <aside class="col-md-2 pe-0 sidebar">
+      <ul class="nav flex-column p-3">
+        <li class="nav-item"><a class="nav-link active" href="index.html">Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="contacts.html">Contacts</a></li>
+        <li class="nav-item"><a class="nav-link" href="leads.html">Leads</a></li>
+        <li class="nav-item"><a class="nav-link" href="opportunities.html">Opportunities</a></li>
+        <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+        <li class="nav-item"><a class="nav-link" href="settings.html">Settings</a></li>
+        <li class="nav-item"><a class="nav-link" href="profile.html">Profile</a></li>
+      </ul>
+    </aside>
+
+    <main class="col-md-10">
+      <h4 class="section-title mb-4">Dashboard Overview</h4>
+
+      <!-- KPI Section -->
+      <div class="row g-3">
+        <div class="col-md-3"><div class="card kpi"><small>Total Revenue</small><h3 id="kpiRevenue">₹0</h3></div></div>
+        <div class="col-md-3"><div class="card kpi"><small>Active Contacts</small><h3 id="kpiContacts">0</h3></div></div>
+        <div class="col-md-3"><div class="card kpi"><small>Open Opportunities</small><h3 id="kpiOpps">0</h3></div></div>
+        <div class="col-md-3"><div class="card kpi"><small>New Leads</small><h3 id="kpiLeads">0</h3></div></div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="row g-4 mt-4">
+        <div class="col-lg-6">
+          <div class="card p-3 chart-animate">
+            <h5>Sales Pipeline</h5>
+            <canvas id="barChart" height="200"></canvas>
+          </div>
+        </div>
+
+        <!-- Upgraded Revenue by Stage -->
+        <div class="col-lg-6">
+          <div class="card p-3 chart-animate text-center">
+            <h5>Revenue by Stage</h5>
+            <div class="position-relative mx-auto" style="height:300px;width:300px;">
+              <canvas id="donutChart"></canvas>
+              <div id="revenueTotal" 
+                   style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+                          color:#fff;font-size:1.3rem;font-weight:600;">
+                Loading...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Cards -->
+      <div class="row g-4 mt-3">
+        <div class="col-md-4">
+          <div class="card glass-card p-3 text-center">
+            <h6>⭐ Top Performing Product</h6>
+            <h4 class="text-gradient mt-2">CRM Suite Pro</h4>
+            <p class="text-light">↑ 15% growth this month</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card glass-card p-3 text-center">
+            <h6>😊 Customer Satisfaction</h6>
+            <h4 class="text-gradient mt-2">92%</h4>
+            <p class="text-light">Based on latest feedback</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card glass-card p-3 text-center">
+            <h6>📈 Conversion Efficiency</h6>
+            <h4 class="text-gradient mt-2">74%</h4>
+            <p class="text-light">Better than last quarter</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="main.js"></script>
+<script>
+  const user = localStorage.getItem("username") || "User";
+  document.getElementById("welcomeUser").textContent = `Welcome, ${user} 👋`;
+  document.getElementById("profileInitial").textContent = user.charAt(0).toUpperCase();
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("username");
+    window.location.href = "login.html";
+  });
+
+  // Animate KPI count
+  const animateCount = (id, target) => {
+    let i = 0;
+    const el = document.getElementById(id);
+    const step = target / 60;
+    const interval = setInterval(() => {
+      i += step;
+      if (i >= target) {
+        el.textContent = "₹" + target.toLocaleString();
+        clearInterval(interval);
+      } else el.textContent = "₹" + Math.floor(i).toLocaleString();
+    }, 20);
+  };
+  animateCount("kpiRevenue", 830000);
+  document.getElementById("kpiContacts").textContent = "38";
+  document.getElementById("kpiOpps").textContent = "12";
+  document.getElementById("kpiLeads").textContent = "7";
+
+  // Sales Pipeline
+  const barCtx = document.getElementById("barChart");
+  new Chart(barCtx, {
+    type: "bar",
+    data: {
+      labels: ["New", "Qualification", "Proposition", "Negotiation", "Won"],
+      datasets: [{
+        label: "Pipeline %",
+        data: [15, 25, 30, 10, 20],
+        backgroundColor: ["#9b5cff", "#06b6d4", "#ffb86b", "#ff6ec7", "#3b82f6"]
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false }, datalabels: { color: "#fff", anchor: "end", align: "top", formatter: v => v + "%" } },
+      scales: { y: { ticks: { color: "#fff" } }, x: { ticks: { color: "#fff" } } },
+      animation: { duration: 2000, easing: "easeOutQuart" }
+    },
+    plugins: [ChartDataLabels]
+  });
+
+  // Interactive Revenue by Stage Chart
+  const donutCtx = document.getElementById("donutChart");
+  const revenueValues = [250000, 500000, 80000];
+  const stageLabels = ["Proposition", "Won", "Qualification"];
+  const total = revenueValues.reduce((a, b) => a + b, 0);
+  const totalDisplay = document.getElementById("revenueTotal");
+  totalDisplay.textContent = "₹" + total.toLocaleString();
+
+  const chart = new Chart(donutCtx, {
+    type: "doughnut",
+    data: {
+      labels: stageLabels,
+      datasets: [{
+        data: revenueValues,
+        backgroundColor: ["#ff6ec7", "#9b5cff", "#06b6d4"],
+        borderWidth: 4,
+        borderColor: "rgba(255,255,255,0.1)",
+        hoverOffset: 14
+      }]
+    },
+    options: {
+      cutout: "70%",
+      plugins: {
+        legend: { labels: { color: "#fff", font: { family: 'Josefin Sans' } } },
+        datalabels: {
+          color: "#fff",
+          font: { weight: "bold", family: "Josefin Sans" },
+          formatter: v => ((v / total) * 100).toFixed(1) + "%",
+          anchor: "center"
+        },
+        tooltip: { enabled: false }
+      },
+      animation: { animateRotate: true, animateScale: true, duration: 2500, easing: "easeOutElastic" },
+      onHover: (evt, activeEls) => {
+        if (activeEls.length > 0) {
+          const idx = activeEls[0].index;
+          const stage = stageLabels[idx];
+          const value = revenueValues[idx];
+          const percent = ((value / total) * 100).toFixed(1);
+          totalDisplay.innerHTML = `
+            <div style="font-size:1.1rem;color:#ccc;">${stage}</div>
+            <div style="font-size:1.3rem;font-weight:700;">₹${value.toLocaleString()}</div>
+            <div style="color:#ff6ec7;">${percent}%</div>
+          `;
+        } else {
+          totalDisplay.textContent = "₹" + total.toLocaleString();
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+</script>
